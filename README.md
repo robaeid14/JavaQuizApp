@@ -11,10 +11,9 @@ A Java-based quiz application that allows users to take quizzes on various topic
 - [Project Structure](#project-structure)
 - [Design and Architecture](#design-and-architecture)
 - [Database Schema](#database-schema)
-- [Installation and Setup](#installation-and-setup)
 - [Usage](#usage)
 - [Screenshots](#screenshots)
-- [License](#license)
+- [Notice](#notice)
 
 ---
 
