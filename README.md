@@ -99,4 +99,27 @@ CREATE TABLE quiz_attempts (
     time_taken INT,
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
+```
+---
+## Usage
+After running the project, you can:
+
+- Login as a user to take quizzes.
+- Login as an admin to manage questions, view quiz results, etc.
+- Follow the on-screen instructions to complete quizzes and view your score.
+---
+## Screenshots
+Here’s a screenshot of the app in action:
+
+![Login Page](images/login.png)
+![Admin Page](images/admin.png)
+![User Page](images/user.png)
+![Database Schema](images/schema.png)
+
+---
+## Notice
+
+This app can be used as the foundation for building a complete, fully functional quiz application. The current version includes essential features like quiz management, user authentication, and a basic question management system. You can extend it further with additional features such as time limits, quiz categories, progress tracking, and more.
+
+Feel free to fork this repository and modify it according to your requirements.
 
