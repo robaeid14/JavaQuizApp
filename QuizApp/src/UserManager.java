@@ -4,7 +4,38 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserManager {
+        // Method for registering a new user
+    public boolean signUp(String username, String password, String role) {
+        // Check if the username already exists
+        String checkSql = "SELECT username FROM users WHERE username = ?";
+        String insertSql = "INSERT INTO users (username, password, role) VALUES (?, ?, ?)";
 
+        try (Connection conn = DBConnection.getConnection()) {
+            // Step 1: Check if username already exists
+            try (PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
+                checkStmt.setString(1, username);
+                ResultSet rs = checkStmt.executeQuery();
+                if (rs.next()) {
+                    // Username already exists
+                    return false;  // Sign up should fail due to duplicate username
+                }
+            }
+
+            // Step 2: Insert new user if username is unique
+            try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
+                insertStmt.setString(1, username);
+                insertStmt.setString(2, password); // Ideally, hash passwords here
+                insertStmt.setString(3, role);
+
+                int rowsAffected = insertStmt.executeUpdate();
+                return rowsAffected > 0;  // Return true if registration was successful
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+/*THIS METHOD CAN'T HANDLE THE EXISTING USERNAME ISSUE AND CRASH THE PROGRAM 
     // Method for registering a new user
     public boolean signUp(String username, String password, String role) {
         String sql = "INSERT INTO users (username, password, role) VALUES (?, ?, ?)";
@@ -22,7 +53,7 @@ public class UserManager {
             return false;
         }
     }
-
+*/
     // Method for logging in a user
     public User logIn(String username, String password) {
         String sql = "SELECT user_id, username, password, role FROM users WHERE username = ? AND password = ?";

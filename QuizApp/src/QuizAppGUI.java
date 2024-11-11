@@ -47,8 +47,46 @@ public class QuizAppGUI extends Application {
         primaryStage.setScene(mainMenuScene);
         primaryStage.show();
     }
-
+    
     // Sign-Up Scene
+private void showSignUpScene() {
+    VBox signUpLayout = new VBox(10);
+    signUpLayout.setPadding(new Insets(20));
+
+    TextField usernameField = new TextField();
+    PasswordField passwordField = new PasswordField();
+    TextField roleField = new TextField();
+    
+    usernameField.setPromptText("Username");
+    passwordField.setPromptText("Password");
+    roleField.setPromptText("Role (admin/user)");
+
+    Button signUpButton = new Button("Sign Up");
+    signUpButton.setOnAction(e -> {
+        String username = usernameField.getText();
+        String password = passwordField.getText();
+        String role = roleField.getText();
+
+        boolean success = userManager.signUp(username, password, role);
+        if (success) {
+            showAlert("Sign-Up", "Sign up successful!", Alert.AlertType.INFORMATION);
+            showMainMenu();
+        } else {
+            showAlert("Sign-Up", "Sign up failed. Username may already exist.", Alert.AlertType.ERROR);
+        }
+    });
+
+    Button backButton = new Button("Back");
+    backButton.setOnAction(e -> showMainMenu());
+
+    signUpLayout.getChildren().addAll(new Label("Sign Up"), usernameField, passwordField, roleField, signUpButton, backButton);
+
+    Scene signUpScene = new Scene(signUpLayout, 300, 300);
+    primaryStage.setScene(signUpScene);
+}
+
+    
+    /*THIS SIGNUP SCENE MODIFIED DUE TO DUPLICATE USERNAME ISSUE
     private void showSignUpScene() {
         VBox signUpLayout = new VBox(10);
         signUpLayout.setPadding(new Insets(20));
@@ -84,7 +122,7 @@ public class QuizAppGUI extends Application {
         Scene signUpScene = new Scene(signUpLayout, 300, 300);
         primaryStage.setScene(signUpScene);
     }
-
+*/
     // Log-In Scene
     private void showLogInScene() {
         VBox logInLayout = new VBox(10);
@@ -194,6 +232,80 @@ public class QuizAppGUI extends Application {
 
     // Update Question Scene
     private void showUpdateQuestionScene() {
+    VBox updateQuestionLayout = new VBox(10);
+    updateQuestionLayout.setPadding(new Insets(20));
+
+    TextField questionIdField = new TextField();
+    TextField questionTextField = new TextField();
+    TextField option1Field = new TextField();
+    TextField option2Field = new TextField();
+    TextField option3Field = new TextField();
+    TextField option4Field = new TextField();
+    TextField correctOptionField = new TextField();
+
+    questionIdField.setPromptText("Question ID");
+    questionTextField.setPromptText("New Question Text");
+    option1Field.setPromptText("New Option 1");
+    option2Field.setPromptText("New Option 2");
+    option3Field.setPromptText("New Option 3");
+    option4Field.setPromptText("New Option 4");
+    correctOptionField.setPromptText("Correct Option (1-4)");
+
+    Button updateButton = new Button("Update Question");
+    updateButton.setOnAction(e -> {
+        try {
+            // Validate that the question ID is a number
+            int questionId = Integer.parseInt(questionIdField.getText());
+            // Validate that the correct option is a number between 1 and 4
+            int correctOption = Integer.parseInt(correctOptionField.getText());
+            if (correctOption < 1 || correctOption > 4) {
+                showAlert("Invalid Input", "Correct Option must be between 1 and 4.", Alert.AlertType.ERROR);
+                return;
+            }
+
+            // Ensure that all fields are filled out
+            String questionText = questionTextField.getText().trim();
+            String option1 = option1Field.getText().trim();
+            String option2 = option2Field.getText().trim();
+            String option3 = option3Field.getText().trim();
+            String option4 = option4Field.getText().trim();
+            
+            if (questionText.isEmpty() || option1.isEmpty() || option2.isEmpty() || option3.isEmpty() || option4.isEmpty()) {
+                showAlert("Missing Input", "All fields must be filled out.", Alert.AlertType.ERROR);
+                return;
+            }
+
+            // Call the update method in QuestionManager
+            boolean success = questionManager.updateQuestion(questionId, questionText, option1, option2, option3, option4, correctOption);
+            if (success) {
+                showAlert("Update Question", "Question updated successfully!", Alert.AlertType.INFORMATION);
+            } else {
+                showAlert("Update Question", "Failed to update question. Check if the question ID exists.", Alert.AlertType.ERROR);
+            }
+
+            showAdminMenu();
+
+        } catch (NumberFormatException ex) {
+            // Handle invalid number formats for question ID and correct option
+            showAlert("Invalid Input", "Please enter valid numbers for Question ID and Correct Option.", Alert.AlertType.ERROR);
+        }
+    });
+
+    Button backButton = new Button("Back");
+    backButton.setOnAction(e -> showAdminMenu());
+
+    updateQuestionLayout.getChildren().addAll(
+            new Label("Update Question"), questionIdField, questionTextField,
+            option1Field, option2Field, option3Field, option4Field,
+            correctOptionField, updateButton, backButton
+    );
+
+    Scene updateQuestionScene = new Scene(updateQuestionLayout, 350, 450);
+    primaryStage.setScene(updateQuestionScene);
+}
+
+    /* THIS IS NOT UPDATING; TRYING NEW CODE
+    private void showUpdateQuestionScene() {
         VBox updateQuestionLayout = new VBox(10);
         updateQuestionLayout.setPadding(new Insets(20));
 
@@ -237,7 +349,7 @@ public class QuizAppGUI extends Application {
         Scene updateQuestionScene = new Scene(updateQuestionLayout, 350, 450);
         primaryStage.setScene(updateQuestionScene);
     }
-
+*/
     // Delete Question Scene
     private void showDeleteQuestionScene() {
         VBox deleteQuestionLayout = new VBox(10);
